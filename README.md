@@ -2,12 +2,6 @@
 
 StreamFuse is a real-time data platform that ingests live event streams from three different domains simultaneously, joins them together inside a 5-minute tumbling window using **Apache Flink**, writes the enriched results to **Apache Pinot** for sub-second database queries, and visualizes everything instantly in a live **Grafana** dashboard.
 
-## The Problem Solved
-
-Most analytical pipelines are "Batch Pipelines". They store data in rigid databases and analyze it hours later. In a modern e-commerce company, waiting 24 hours to find out that a lagging checkout server is killing Ad Campaign revenue is unacceptable. 
-
-StreamFuse solves this by merging data "in-flight" while it is still moving through the network, allowing you to build a 360-degree view of your operations in milliseconds.
-
 ## The Architecture & Workflow
 
 StreamFuse focuses on **E-Commerce Web Performance**. It demonstrates multi-domain enrichment by instantly combining Marketing (Ad clicks), Finance (Transactions), and IT Hardware (Server Metrics).
@@ -18,13 +12,6 @@ StreamFuse focuses on **E-Commerce Web Performance**. It demonstrates multi-doma
 4. **Apache Pinot:** Real-time Online Analytical Processing (OLAP) database optimized for hyper-fast aggregations. It ingests the Flink math instantly without locking or freezing up.
 5. **Grafana:** Connects natively to Pinot to render live, breathing operational intelligence dashboards based on sub-second SQL queries.
 
-### Avro Definitions (`schemas/`)
-
-*(These act as rigid rule books. If a Python script tries to send a "click" without a `user_id`, the Schema Registry rejects it instantly to prevent the pipeline from crashing).*
-
-- `click_event.avsc`: Dictates the shape of a click (`user_id`, `page_url`, `device_type`).
-- `transaction.avsc`: Dictates the shape of a purchase (`txn_id`, `user_id`, `amount`, `server_id`).
-- `server_metric.avsc`: Dictates the shape of a server latency log (`server_id`, `cpu_utilization`, `latency_ms`).
 
 ## How to Run
 
@@ -49,7 +36,4 @@ Once the script says `=== StreamFuse is Fully Running! ===`, head to [http://loc
 1. **Checkout Server Latency**: Time series tracking live latency spikes matching specific checkout server nodes processing the purchases.
 2. **Total Processed Spend**: A live counter capturing the total aggregated transaction value of the real-time financial stream.
 
-### Graceful Shutdown
-To completely turn off the platform and wipe the background data streams, open your terminal and run:
-*Windows Users:* `taskkill -F -IM python.exe` then `docker-compose down -v`
-*Mac/Linux Users:* `killall python` then `docker-compose down -v`
+
