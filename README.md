@@ -12,6 +12,23 @@ StreamFuse focuses on **E-Commerce Web Performance**. It demonstrates multi-doma
 4. **Apache Pinot:** Real-time Online Analytical Processing (OLAP) database optimized for hyper-fast aggregations. It ingests the Flink math instantly without locking or freezing up.
 5. **Grafana:** Connects natively to Pinot to render live, breathing operational intelligence dashboards based on sub-second SQL queries.
 
+## Technology Stack
+
+- **Apache Flink**: Highly scalable, stateful stream-processing framework utilized for performing complex, in-memory 5-minute tumbling window joins across live data streams.
+- **Apache Kafka & Confluent Schema Registry**: High-throughput distributed message broker paired with strict Avro serialization to guarantee structural event integrity and prevent poison-pill crashes.
+- **Apache Pinot**: Real-time OLAP datastore optimized for sub-second, hyper-fast aggregations and direct, lock-free ingestion from Kafka topics.
+- **Grafana**: Interactive visualization endpoint linking natively to Pinot via REST to render live, updating operational intelligence dashboards.
+- **Python**: Producer generators utilizing the `confluent-kafka` library to orchestrate and simulate high-volume, continuous multi-domain web traffic.
+- **Docker Compose**: Complete cluster containerization, ensuring instant deployment of all nodes (Zookeeper, JobManagers, Brokers) entirely isolated from the host machine.
+
+## Repository Structure
+
+- `docker-compose.yml`: Primary configuration file that initializes the isolated internal network and spins up all heavyweight containers (Kafka, Zookeeper, Flink, Pinot, Schema Registry, Grafana).
+- `schemas/`: Holds the strict Avro rule books (`click_event.avsc`, `transaction.avsc`, `server_metric.avsc`) that physically force the data shape before Kafka accepts it.
+- `producers/`: Contains the highly threaded Python simulator scripts (`clicks_producer.py`, `transactions_producer.py`, `server_metrics_producer.py`) that pump live mock events into the Kafka topics.
+- `flink/streaming_join.sql`: The hardcore Stream Processing logic. Houses the Flink SQL Table-Valued Functions (TVF) that execute the 3-way Tumbling Window joins matching Users to Checkout Latency.
+- `pinot/`: Houses the complex JSON schemas orchestrating Pinot's high-speed columnar database indices for zero-lag aggregation.
+- `scripts/`: Holds the critical automated bash logic (`start.sh`, `register_schemas.sh`, `init_pinot.sh`, `setup_grafana.py`) that bypasses manual API handshakes to launch the pipeline instantly.
 
 ## How to Run
 
