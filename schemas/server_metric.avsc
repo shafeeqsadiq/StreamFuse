@@ -1,0 +1,12 @@
+{
+  "type": "record",
+  "name": "ServerMetric",
+  "namespace": "com.streamfuse",
+  "fields": [
+    {"name": "metric_id", "type": "string"},
+    {"name": "server_id", "type": "string"},
+    {"name": "cpu_utilization", "type": "double"},
+    {"name": "latency_ms", "type": "double"},
+    {"name": "reading_ts", "type": {"type": "long", "logicalType": "timestamp-millis"}}
+  ]
+}

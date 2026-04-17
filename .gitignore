@@ -1,0 +1,11 @@
+# Heavy Flink connector JARs
+flink-lib/
+*.jar
+
+# Python caches
+__pycache__/
+*.pyc
+
+# OS Files
+.DS_Store
+Thumbs.db

@@ -1,0 +1,41 @@
+{
+  "schemaName": "enriched_events",
+  "dimensionFieldSpecs": [
+    {
+      "name": "user_id",
+      "dataType": "STRING"
+    },
+    {
+      "name": "device_type",
+      "dataType": "STRING"
+    }
+  ],
+  "metricFieldSpecs": [
+    {
+      "name": "click_count",
+      "dataType": "LONG"
+    },
+    {
+      "name": "total_spend",
+      "dataType": "DOUBLE"
+    },
+    {
+      "name": "avg_latency_ms",
+      "dataType": "DOUBLE"
+    }
+  ],
+  "dateTimeFieldSpecs": [
+    {
+      "name": "window_start",
+      "dataType": "LONG",
+      "format": "1:MILLISECONDS:EPOCH",
+      "granularity": "1:MILLISECONDS"
+    },
+    {
+      "name": "window_end",
+      "dataType": "LONG",
+      "format": "1:MILLISECONDS:EPOCH",
+      "granularity": "1:MILLISECONDS"
+    }
+  ]
+}

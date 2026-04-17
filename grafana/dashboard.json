@@ -1,0 +1,55 @@
+{
+  "title": "StreamFuse Live Dashboard",
+  "refresh": "1s",
+  "time": {
+    "from": "now-5m",
+    "to": "now"
+  },
+  "panels": [
+    {
+      "title": "Events Per Minute (Clicks by Device)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "targets": [
+        {
+          "query": "SELECT window_start, device_type, sum(click_count) FROM enriched_events WHERE window_start >= $__timeFrom() GROUP BY window_start, device_type",
+          "queryType": "sql"
+        }
+      ]
+    },
+    {
+      "title": "Revenue by Device Type",
+      "type": "barchart",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "targets": [
+        {
+          "query": "SELECT device_type, sum(total_spend) AS revenue FROM enriched_events WHERE window_start >= $__timeFrom() GROUP BY device_type",
+          "queryType": "sql"
+        }
+      ]
+    },
+    {
+      "title": "Active Users (Last 5 Mins)",
+      "type": "stat",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+      "targets": [
+        {
+          "query": "SELECT distinctCount(user_id) FROM enriched_events WHERE window_start >= $__timeFrom()",
+          "queryType": "sql"
+        }
+      ]
+    },
+    {
+      "title": "Average Sensor Temperature by User",
+      "type": "gauge",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+      "targets": [
+        {
+          "query": "SELECT avg(avg_temperature) FROM enriched_events WHERE window_start >= $__timeFrom()",
+          "queryType": "sql"
+        }
+      ]
+    }
+  ],
+  "schemaVersion": 38
+}

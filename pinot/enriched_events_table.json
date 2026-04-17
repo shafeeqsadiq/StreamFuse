@@ -1,0 +1,30 @@
+{
+  "tableName": "enriched_events",
+  "tableType": "REALTIME",
+  "segmentsConfig": {
+    "timeColumnName": "window_start",
+    "timeType": "MILLISECONDS",
+    "retentionTimeUnit": "DAYS",
+    "retentionTimeValue": "1",
+    "segmentPushType": "APPEND",
+    "schemaName": "enriched_events",
+    "replicasPerPartition": "1"
+  },
+  "tenants": {},
+  "tableIndexConfig": {
+    "loadMode": "MMAP",
+    "streamConfigs": {
+      "streamType": "kafka",
+      "stream.kafka.topic.name": "enriched_events",
+      "stream.kafka.broker.list": "kafka1:29092",
+      "stream.kafka.consumer.type": "lowlevel",
+      "stream.kafka.consumer.prop.auto.offset.reset": "smallest",
+      "stream.kafka.consumer.factory.class.name": "org.apache.pinot.plugin.stream.kafka20.KafkaConsumerFactory",
+      "stream.kafka.decoder.class.name": "org.apache.pinot.plugin.stream.kafka.KafkaJSONMessageDecoder",
+      "realtime.segment.flush.threshold.rows": "1000",
+      "realtime.segment.flush.threshold.time": "24h"
+    }
+  },
+  "metadata": {},
+  "routing": {}
+}

@@ -1,0 +1,12 @@
+{
+  "type": "record",
+  "name": "Transaction",
+  "namespace": "com.streamfuse",
+  "fields": [
+    {"name": "txn_id", "type": "string"},
+    {"name": "user_id", "type": "string"},
+    {"name": "amount", "type": "double"},
+    {"name": "server_id", "type": "string"},
+    {"name": "txn_ts", "type": {"type": "long", "logicalType": "timestamp-millis"}}
+  ]
+}

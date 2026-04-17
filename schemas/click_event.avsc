@@ -1,0 +1,13 @@
+{
+  "type": "record",
+  "name": "ClickEvent",
+  "namespace": "com.streamfuse",
+  "fields": [
+    {"name": "event_id", "type": "string"},
+    {"name": "user_id", "type": "string"},
+    {"name": "session_id", "type": "string"},
+    {"name": "page_url", "type": "string"},
+    {"name": "event_ts", "type": {"type": "long", "logicalType": "timestamp-millis"}},
+    {"name": "device_type", "type": "string"}
+  ]
+}
