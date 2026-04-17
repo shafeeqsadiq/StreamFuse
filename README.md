@@ -1,6 +1,6 @@
 # StreamFuse: Real-Time Web Infrastructure Analytics Platform
 
-StreamFuse is a real-time data platform that ingests live event streams from three different domains simultaneously, joins them together inside a 5-minute tumbling window using **Apache Flink**, writes the enriched results to **Apache Pinot** for sub-second database queries, and visualizes everything instantly in a live **Grafana** dashboard.
+StreamFuse is a real-time data platform that ingests live event streams from three different domains simultaneously, joins them together inside a 5-minute fixed window using **Apache Flink**, writes the enriched results to **Apache Pinot** for sub-second database queries, and visualizes everything instantly in a live **Grafana** dashboard.
 
 ## The Architecture & Workflow
 
@@ -8,18 +8,18 @@ StreamFuse focuses on **E-Commerce Web Performance**. It demonstrates multi-doma
 
 1. **Python Producers:** Continuously emit mock `ClickEvents`, `Transactions`, and `ServerMetrics` (CPU/Latency) to Apache Kafka. 
 2. **Kafka & Schema Registry:** Serves as the ultra-fast message highway. Events are serialized into tiny binary footprints using **Avro** and managed via the Confluent Schema Registry to prevent corrupted data from crashing the pipeline (Poison Pills).
-3. **Apache Flink Stream Join:** Acts as the processing brain. It performs intense in-memory stream-stream joins on `user_id` and `server_id` using 5-minute Tumbling Windows. It accurately calculates exactly how much money users spent, and correlates it with the exact latency of the server that handled their checkout. It then spits this JSON math back to an `enriched_events` Kafka topic.
+3. **Apache Flink Stream Join:** Acts as the processing brain. It performs intense in-memory stream-stream joins on `user_id` and `server_id` using 5-minute fixed windows. It accurately calculates exactly how much money users spent, and correlates it with the exact latency of the server that handled their checkout. It then spits this JSON math back to an `enriched_events` Kafka topic.
 4. **Apache Pinot:** Real-time Online Analytical Processing (OLAP) database optimized for hyper-fast aggregations. It ingests the Flink math instantly without locking or freezing up.
 5. **Grafana:** Connects natively to Pinot to render live, breathing operational intelligence dashboards based on sub-second SQL queries.
 
 ## Technology Stack
 
-- **Apache Flink**: Highly scalable, stateful stream-processing framework utilized for performing complex, in-memory 5-minute tumbling window joins across live data streams.
-- **Apache Kafka & Confluent Schema Registry**: High-throughput distributed message broker paired with strict Avro serialization to guarantee structural event integrity and prevent poison-pill crashes.
-- **Apache Pinot**: Real-time OLAP datastore optimized for sub-second, hyper-fast aggregations and direct, lock-free ingestion from Kafka topics.
-- **Grafana**: Interactive visualization endpoint linking natively to Pinot via REST to render live, updating operational intelligence dashboards.
-- **Python**: Producer generators utilizing the `confluent-kafka` library to orchestrate and simulate high-volume, continuous multi-domain web traffic.
-- **Docker Compose**: Complete cluster containerization, ensuring instant deployment of all nodes (Zookeeper, JobManagers, Brokers) entirely isolated from the host machine.
+- **Apache Flink**
+- **Apache Kafka & Confluent Schema Registry**
+- **Apache Pinot**
+- **Grafana**
+- **Python**
+- **Docker Compose**
 
 ## Repository Structure
 
