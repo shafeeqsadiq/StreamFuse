@@ -60,6 +60,7 @@ Apache Pinot ingests enriched events in real time.
 
 Grafana connects to Pinot and displays live dashboards using SQL queries.
 
+---
 
 ## Tech Stack
 
