@@ -24,7 +24,6 @@ Python producers continuously generate mock events:
 
 These are sent to Kafka topics.
 
----
 
 ### Messaging Layer
 
@@ -34,7 +33,6 @@ Kafka handles high-throughput data streaming.
 * Schema Registry enforces strict data formats
 * Prevents invalid data from entering the pipeline
 
----
 
 ### Stream Processing
 
@@ -49,7 +47,6 @@ Apache Flink performs real-time processing by:
 
 The output is written to an `enriched_events` Kafka topic.
 
----
 
 ### Storage
 
@@ -58,13 +55,11 @@ Apache Pinot ingests enriched events in real time.
 * Optimized for fast OLAP queries
 * Supports sub-second aggregations
 
----
 
 ### Visualization
 
 Grafana connects to Pinot and displays live dashboards using SQL queries.
 
----
 
 ## Tech Stack
 
