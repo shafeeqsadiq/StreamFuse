@@ -1,56 +1,144 @@
-# StreamFuse: Real-Time Web Infrastructure Analytics Platform
+# StreamFuse: Real-Time Web Analytics Platform
 
-StreamFuse is a real-time data platform that ingests live event streams from three different domains simultaneously, joins them together inside a 5-minute fixed window using **Apache Flink**, writes the enriched results to **Apache Pinot** for sub-second database queries, and visualizes everything instantly in a live **Grafana** dashboard.
+StreamFuse is a real-time data pipeline that ingests, processes, and visualizes live data from multiple domains in an e-commerce system.
 
-## The Architecture & Workflow
+It combines:
 
-StreamFuse focuses on **E-Commerce Web Performance**. It demonstrates multi-domain enrichment by instantly combining Marketing (Ad clicks), Finance (Transactions), and IT Hardware (Server Metrics).
+* Marketing data (ad clicks)
+* Financial data (transactions)
+* Infrastructure data (server metrics)
 
-1. **Python Producers:** Continuously emit mock `ClickEvents`, `Transactions`, and `ServerMetrics` (CPU/Latency) to Apache Kafka. 
-2. **Kafka & Schema Registry:** Serves as the ultra-fast message highway. Events are serialized into tiny binary footprints using **Avro** and managed via the Confluent Schema Registry to prevent corrupted data from crashing the pipeline (Poison Pills).
-3. **Apache Flink Stream Join:** Acts as the processing brain. It performs intense in-memory stream-stream joins on `user_id` and `server_id` using 5-minute fixed windows. It accurately calculates exactly how much money users spent, and correlates it with the exact latency of the server that handled their checkout. It then spits this JSON math back to an `enriched_events` Kafka topic.
-4. **Apache Pinot:** Real-time Online Analytical Processing (OLAP) database optimized for hyper-fast aggregations. It ingests the Flink math instantly without locking or freezing up.
-5. **Grafana:** Connects natively to Pinot to render live, breathing operational intelligence dashboards based on sub-second SQL queries.
+All streams are joined in real time to generate enriched insights.
 
-## Technology Stack
+---
 
-- **Apache Flink**
-- **Apache Kafka & Confluent Schema Registry**
-- **Apache Pinot**
-- **Grafana**
-- **Python**
-- **Docker Compose**
+## Architecture
 
-## Repository Structure
+### Data Ingestion
 
-- `docker-compose.yml`: Primary configuration file that initializes the isolated internal network and spins up all heavyweight containers (Kafka, Zookeeper, Flink, Pinot, Schema Registry, Grafana).
-- `schemas/`: Holds the strict Avro rule books (`click_event.avsc`, `transaction.avsc`, `server_metric.avsc`) that physically force the data shape before Kafka accepts it.
-- `producers/`: Contains the highly threaded Python simulator scripts (`clicks_producer.py`, `transactions_producer.py`, `server_metrics_producer.py`) that pump live mock events into the Kafka topics.
-- `flink/streaming_join.sql`: The hardcore Stream Processing logic. Houses the Flink SQL Table-Valued Functions (TVF) that execute the 3-way Tumbling Window joins matching Users to Checkout Latency.
-- `pinot/`: Houses the complex JSON schemas orchestrating Pinot's high-speed columnar database indices for zero-lag aggregation.
-- `scripts/`: Holds the critical automated bash logic (`start.sh`, `register_schemas.sh`, `init_pinot.sh`, `setup_grafana.py`) that bypasses manual API handshakes to launch the pipeline instantly.
+Python producers continuously generate mock events:
+
+* ClickEvents
+* Transactions
+* ServerMetrics
+
+These are sent to Kafka topics.
+
+---
+
+### Messaging Layer
+
+Kafka handles high-throughput data streaming.
+
+* Events are serialized using Avro
+* Schema Registry enforces strict data formats
+* Prevents invalid data from entering the pipeline
+
+---
+
+### Stream Processing
+
+Apache Flink performs real-time processing by:
+
+* Joining streams on `user_id` and `server_id`
+* Using 5-minute tumbling windows
+* Calculating:
+
+  * Total user spend
+  * Server latency during checkout
+
+The output is written to an `enriched_events` Kafka topic.
+
+---
+
+### Storage
+
+Apache Pinot ingests enriched events in real time.
+
+* Optimized for fast OLAP queries
+* Supports sub-second aggregations
+
+---
+
+### Visualization
+
+Grafana connects to Pinot and displays live dashboards using SQL queries.
+
+---
+
+## Tech Stack
+
+* Apache Kafka + Schema Registry
+* Apache Flink
+* Apache Pinot
+* Grafana
+* Python
+* Docker Compose
+
+---
+
+## Project Structure
+
+```
+docker-compose.yml     # Starts all services
+
+schemas/               # Avro schemas
+producers/             # Python data generators
+flink/                 # Stream processing SQL
+pinot/                 # Pinot configs
+scripts/               # Automation scripts
+```
+
+---
 
 ## How to Run
 
-Ensure you have Docker and Python installed. **Note:** If you are running Docker Desktop on Windows, please ensure you have configured your `.wslconfig` to allow Docker at least 6GB-8GB of memory so the JVMs don't crash.
+### Prerequisites
 
-Execute the startup script which automatically performs:
-1. Downloading necessary Flink Kafka & Avro connectors
-2. Starting the Docker Compose cluster (Kafka, Schema Registry, Zookeeper, Flink, Pinot, Grafana)
-3. Registering Avro schemas to the Confluent Schema Registry
-4. Creating Apache Pinot real-time tables
-5. Automating Grafana Dashboard/Datasource provisioning via REST API
-6. Spawning 3 Python simulated data producers in the background
-7. Submitting the Flink SQL Job to `flink-jobmanager`
+* Docker
+* Python
+* 6–8GB RAM recommended
 
-```bash
+### Start the System
+
+```
 sh scripts/start.sh
 ```
 
-## Dashboard Overview
-Once the script says `=== StreamFuse is Fully Running! ===`, head to [http://localhost:3000](http://localhost:3000) (Login: `admin`/`admin`) to experience the stream visualized under **Dashboards -> StreamFuse Live Analytics**:
+This will:
 
-1. **Checkout Server Latency**: Time series tracking live latency spikes matching specific checkout server nodes processing the purchases.
-2. **Total Processed Spend**: A live counter capturing the total aggregated transaction value of the real-time financial stream.
+* Start all services (Kafka, Flink, Pinot, Grafana)
+* Register schemas
+* Initialize Pinot tables
+* Launch data producers
+* Submit the Flink job
+* Configure Grafana dashboards
 
+---
 
+## Dashboard
+
+Open: http://localhost:3000
+Login: `admin / admin`
+
+Navigate to:
+**Dashboards → StreamFuse Live Analytics**
+
+---
+
+## Key Metrics
+
+* **Checkout Server Latency**
+  Tracks real-time latency of servers handling transactions
+
+* **Total Processed Spend**
+  Displays cumulative transaction value
+
+---
+
+## Summary
+
+StreamFuse demonstrates a complete real-time analytics pipeline:
+data ingestion → stream processing → storage → visualization
+
+It highlights how multiple data streams can be joined and analyzed instantly to generate actionable insights.
